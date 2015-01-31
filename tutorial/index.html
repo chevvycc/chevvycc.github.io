@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head lang="fr">
+    <meta charset="UTF-8">
+    <title>Tutoriel NodeJS & base de données pour débutants</title>
+
+    <link href="bower_components/flat-ui/dist/css/vendor/bootstrap.min.css" rel="stylesheet">
+    <link href="bower_components/flat-ui/dist/css/flat-ui.min.css" rel="stylesheet">
+    <link href="lib/css-treeview/css/style.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+<header class="container logo">
+    <p>Tutoriel NodeJS</p>
+    <small>ExpressJS & base de données MongoDB, MySQL</small>
+</header>
+
+<div class="container">
+    <div class="row">
+        <p><strong>Donc</strong> tu veux créer des applications Web trendy en NodeJS toi aussi...T'aimerais ça déployer une application back-end en claquant
+            des doigts (si tu en as), te connecter à une base de données pour stocker des informations ultra-secrètes et répondre aux demandes de tes milliers d'utilisateurs.
+        </p>
+        <p><strong>No big deal.</strong> C'est exactement ce que je vais te montrer.</p>
+        <p class="disclaimer">Dislaimer: Ce tutorial s'adresse à tous ceux qui n'ont aucune connaissance de NodeJS.</p>
+    </div>
+
+
+    <div class="row">
+        <p>
+            On va développer une application simple pour gérer un inventaire de films.
+            Idéalement, on veut pouvoir <strong>consulter</strong> les films, <strong>ajouter</strong> des films, <strong>modifier</strong> les informations d'un film et <strong>supprimer</strong> des films.
+        </p>
+    </div>
+
+
+    <div class="row">
+        <h5>Level 1: L'environnement de travail</h5>
+        <ul>
+            <li>
+                <strong>Installer NodeJS</strong>
+                <p>NodeJS s'installe très facilement. Simplement télécharger l'auto-installer à partir de <a href="http://nodejs.org/" target="_blank">http://nodejs.org/</a> et suivre les étapes d'installation.</p>
+            </li>
+        </ul>
+        <p>Pow! <i class="icon-level-up"></i> Level up!</p>
+    </div>
+
+
+    <div class="row">
+        <h5>Level 2: Beat the <i>Hello World!</i> boss</h5>
+        <ul>
+            <li>
+                <strong>Créer un répertoire pour l'application</strong>
+                <p><i>"Sérieux? Il va nous expliquer comment créer un dossier?"</i><strong> Oui.</strong></p>
+                <p>Crée-toi un nouveau dossier "Rotten Vegetables" (source: <a href="http://www.rottentomatoes.com" target="_blank">Rotten Tomatoes</a>)
+                    et crée également 2 nouveaux fichiers (package.json, app.js). La structure du dossier devrait ressembler à ceci:</p>
+                <div class="css-treeview">
+                    <ul>
+                        <li><input type="checkbox" id="lvl2-tree1-item-1" checked="checked" /><label for="lvl2-tree1-item-1">Rotten Vegetables</label>
+                            <ul>
+                                <li>package.json</li>
+                                <li>app.js</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                <li>
+                <strong>Modifier le fichier package.json</strong>
+                <p>Le contenu du fichier <strong>package.json</strong>:</p>
+                <pre><code id=packagejson_level1_1></code></pre>
+
+                <p>Tous les packages <a href="https://www.npmjs.com/" target="_blank">npm</a> contiennent un fichier, généralement à la racine du projet,
+                    appelé package.json - ce fichier contient différentes <strong>métadonnées</strong> pertinentes pour le projet.
+                    Ce fichier est utilisé pour donner des informations à <a href="https://www.npmjs.com/" target="_blank">npm</a> qui permet d'<strong>identifier</strong> le projet ainsi que gérer les <strong>dépendances</strong> du projet.
+                    Il peut également contenir d'autres métadonnées comme une <i>description</i> du projet, la <i>version</i> du projet en une distribution particulière,
+                    les informations de <i>licence</i>, même les données de configuration - tout ce qui peut être vitale à la fois <a href="https://www.npmjs.com/" target="_blank">npm</a> et les utilisateurs
+                    finaux de l'emballage. Le fichier package.json est normalement situé dans le répertoire racine d'un projet Node.
+                </p>
+            </li>
+
+            <li>
+                <div><strong>Installer les dépendances</strong></div>
+                <p>Une autre étape facile. Ouvre une ligne de commande (command prompt) dans le répertoire racine du projet et tappe "npm install"</p>
+                <p class="console">C:\Rotten Vegetables> npm install</p>
+                <p>En gros, <i>npm install</i> va lire le fichier <strong>package.json</strong> pour vérifier le projet dépend de librairies externes. Dans notre cas, <i>express</i>
+                    est une dépendance. <i>npm</i> va donc installer une version d'express (^4.9.8 signifie d'installer la version 4.9.8 ou une plus récente si disponible).
+                </p>
+                <p>La structure du projet devrait maintenant ressembler à ceci:</p>
+                <div class="css-treeview">
+                    <ul>
+                        <li><input type="checkbox" id="lvl2-tree2-item-1" checked="checked" /><label for="lvl2-tree2-item-1">Rotten Vegetables</label>
+                            <ul>
+                                <li><input type="checkbox" id="lvl2-tree2-item-2" checked="checked" /><label for="lvl2-tree2-item-2">node_modules</label>
+                                    <ul>
+                                        <li><input type="checkbox" id="lvl2-tree2-item-3" checked="checked" /><label for="lvl2-tree2-item-3">express</label>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>package.json</li>
+                                <li>app.js</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li>
+                <div><strong>Modifier app.js</strong></div>
+                <p>Le contenu du fichier <strong>app.js</strong></p>
+<pre class="prettyprint" class="col-md-6">
+    var express = require('express');
+    var app = express();
+
+    app.get('/', function(req, res) {
+        res.send("Hello World!");
+    });
+
+    app.listen(5000), function() {
+        console.log("Rotten Vegetables app running at localhost:" + 5000);
+    });
+</pre>
+                <p>Là on commence à parler plus sérieusement. Quelques explications:
+<pre class="prettyprint">
+    var express = require('express'); //On inclu la libairie express
+    var app = express(); //Notre application utilise le framework d'express
+</pre>
+<pre class="prettyprint">
+    /**
+    params:
+        req: Un object contenant la requête HTTP reçue
+        res: Un object contenant la réponse HTTP à envoyer
+    desc: Lorsqu'on reçoit une requête GET à l'adresse http://localhost:5000/,
+          on renvoie le string "Hello World!"
+    **/
+     app.get('/', function(req, res) {
+        res.send("Hello World!");
+    });
+</pre>
+<pre class="prettyprint">
+    //Écoute sur le port 5000.
+    app.listen(5000), function() {
+        console.log("Rotten Vegetables app running at localhost:" + 5000);
+    });
+</pre>
+                </p>
+                <p>On commence déjà à voir la magie de NodeJS & Express. Il serait temps de tester ça.</p>
+            </li>
+
+            <li>
+                <strong>Démarrer l'application</strong>
+                <p>Pour démarrer l'application il suffit d'ouvrir une ligne de commande (command prompt) dans le dossier racine du projet et d'exécuter
+                    la commande <strong>node app.js</strong>.</p>
+                <p class="console">C:\Rotten Vegetables> node app.js<br>Rotten Vegetables app running at localhost:5000</p>
+                <p>Ouvres ton navigateur et rends-toi à l'adresse <strong>http://localhost:5000/</strong>. Tu devrais voir le même résultat:</p>
+                <img src="img/tuto-img-helloworld.JPG" alt="Hello World en NodeJS & Express">
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<script src="lib/jquery-1.11.2.min.js"></script>
+<script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

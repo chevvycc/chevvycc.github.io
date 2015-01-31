@@ -1,0 +1,12 @@
+{
+  "name": "NodeJS tutorial",
+  "version": "0.1.2",
+  "description": "Basic NodeJS tutorial for total beginners",
+  "main": "index.html",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "flat-ui": "~2.2.2",
+    "font-awesome": "~4.2.0"
+  }
+}
